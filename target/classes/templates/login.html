@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Management System - Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 400px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .logo-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .demo-info {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #1976d2;
+        }
+        .demo-info strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        body.dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        body.dark .login-container {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body.dark .logo-text {
+            color: #fff;
+        }
+        body.dark .logo-subtitle {
+            color: #ccc;
+        }
+        body.dark .form-group label {
+            color: #ccc;
+        }
+        body.dark .form-input {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #fff;
+        }
+        body.dark .form-input:focus {
+            background: #333;
+            border-color: #667eea;
+        }
+        body.dark .form-select {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #fff;
+        }
+        body.dark .form-select:focus {
+            background: #333;
+        }
+        body.dark .demo-info {
+            background: #1e3a5f;
+            color: #64b5f6;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <div class="login-container">
+        <div class="logo">
+            <span class="logo-icon">⚕️</span>
+            <div class="logo-text">Sagara Hospital</div>
+            <div class="logo-subtitle">Alappuzha • Secure Access Portal</div>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="role">Login As</label>
+                <select id="role" class="form-select" required>
+                    <option value="">Select your role</option>
+                    <option value="admin">🧑‍💼 Hospital Administrator</option>
+                    <option value="doctor">👨‍⚕️ Doctor</option>
+                    <option value="patient">👤 Patient</option>
+                </select>
+            </div>
+            
+            <div class="loading" id="loading">Logging in...</div>
+            
+            <button type="submit" class="btn" id="loginBtn">Sign In</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+            <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">New Patient?</p>
+            <button type="button" onclick="window.location.href='/patient_register'" style="width: 100%; padding: 0.8rem; background: linear-gradient(45deg, #28a745, #20c997); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: 600;">Register as New Patient</button>
+        </div>
+        
+        <div class="demo-info">
+            <strong>Demo Credentials:</strong>
+            Admin: admin/demo123<br>
+            Doctors: dr.smith/doc123, dr.johnson/doc123, dr.brown/doc123<br>
+            Patients: patient1/demo123, patient2/demo123, patient3/demo123
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const loading = document.getElementById('loading');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        // Demo credentials - In production, use proper authentication
+        const credentials = {
+            admin: { username: 'admin', password: 'demo123' },
+            'dr.smith': { username: 'dr.smith', password: 'doc123', name: 'Dr. John Smith', role: 'doctor' },
+            'dr.johnson': { username: 'dr.johnson', password: 'doc123', name: 'Dr. Sarah Johnson', role: 'doctor' },
+            'dr.brown': { username: 'dr.brown', password: 'doc123', name: 'Dr. Michael Brown', role: 'doctor' },
+            patient1: { username: 'patient1', password: 'demo123', name: 'John Doe', email: 'patient@demo.com' },
+            patient2: { username: 'patient2', password: 'demo123', name: 'Jane Smith', email: 'jane.smith@email.com' },
+            patient3: { username: 'patient3', password: 'demo123', name: 'Mike Johnson', email: 'mike.johnson@email.com' },
+            patient: { username: 'patient', password: 'demo123' }
+        };
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 4000);
+        }
+        
+        function showLoading(show) {
+            loading.style.display = show ? 'block' : 'none';
+            loginBtn.style.display = show ? 'none' : 'block';
+        }
+        
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            
+            // Validation
+            if (!username || !password || !role) {
+                showError('Please fill in all fields');
+                return;
+            }
+            
+            // Check credentials
+            let user = credentials[username];
+            if (!user || username !== user.username || password !== user.password) {
+                showError('Invalid credentials. Please check username, password, and role.');
+                return;
+            }
+            
+            // Validate role matches
+            if (role === 'doctor' && !user.role) {
+                showError('Invalid doctor credentials.');
+                return;
+            }
+            
+            // Show loading
+            showLoading(true);
+            
+            // Simulate login delay
+            setTimeout(() => {
+                // Store user session
+                localStorage.setItem('hospitalUser', JSON.stringify({
+                    username: username,
+                    role: role,
+                    loginTime: new Date().toISOString()
+                }));
+                
+                // Store patient profile if available
+                if (user.name && user.email) {
+                    localStorage.setItem('patientProfile', JSON.stringify({
+                        firstName: user.name.split(' ')[0],
+                        lastName: user.name.split(' ')[1] || '',
+                        email: user.email
+                    }));
+                }
+                
+                // Store doctor profile if available
+                if (user.role === 'doctor') {
+                    localStorage.setItem('doctorProfile', JSON.stringify({
+                        name: user.name,
+                        username: user.username
+                    }));
+                }
+                
+                // Redirect based on role with API authentication
+                if (role === 'admin') {
+                    window.location.href = '/admin_dashboard';
+                } else if (role === 'doctor') {
+                    // Try API authentication
+                    fetch('/api/auth/doctor', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    }).then(r => r.json()).then(data => {
+                        if (data && data.firstName) {
+                            localStorage.setItem('currentDoctor', JSON.stringify(data));
+                            window.location.href = '/doctor_dashboard';
+                        } else if (user && user.role === 'doctor') {
+                            localStorage.setItem('currentDoctor', JSON.stringify({
+                                firstName: user.name.split(' ')[1],
+                                lastName: user.name.split(' ')[2] || '',
+                                username: user.username
+                            }));
+                            window.location.href = '/doctor_dashboard';
+                        }
+                    }).catch(() => {
+                        if (user && user.role === 'doctor') {
+                            localStorage.setItem('currentDoctor', JSON.stringify({
+                                firstName: user.name.split(' ')[1],
+                                lastName: user.name.split(' ')[2] || '',
+                                username: user.username
+                            }));
+                            window.location.href = '/doctor_dashboard';
+                        }
+                    });
+                } else if (role === 'patient') {
+                    // Try API authentication
+                    fetch('/api/auth/patient', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    }).then(r => r.json()).then(data => {
+                        if (data && data.firstName) {
+                            localStorage.setItem('currentPatient', JSON.stringify(data));
+                            localStorage.setItem('currentPatientEmail', data.email);
+                            window.location.href = '/patient_dashboard';
+                        } else if (user && user.email) {
+                            localStorage.setItem('currentPatient', JSON.stringify({
+                                firstName: user.name.split(' ')[0],
+                                lastName: user.name.split(' ')[1] || '',
+                                email: user.email,
+                                username: user.username
+                            }));
+                            localStorage.setItem('currentPatientEmail', user.email);
+                            window.location.href = '/patient_dashboard';
+                        }
+                    }).catch(() => {
+                        if (user && user.email) {
+                            localStorage.setItem('currentPatient', JSON.stringify({
+                                firstName: user.name.split(' ')[0],
+                                lastName: user.name.split(' ')[1] || '',
+                                email: user.email,
+                                username: user.username
+                            }));
+                            localStorage.setItem('currentPatientEmail', user.email);
+                            window.location.href = '/patient_dashboard';
+                        }
+                    });
+                }
+            }, 1000);
+        });
+        
+        // Auto-fill demo credentials on role selection
+        document.getElementById('role').addEventListener('change', function() {
+            const role = this.value;
+            if (role && credentials[role]) {
+                document.getElementById('username').value = credentials[role].username;
+                document.getElementById('password').value = credentials[role].password;
+            }
+        });
+        
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Load saved theme
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark');
+            themeToggle.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDark);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+com\hospital\Doctor.class
+com\hospital\Appointment.class
+com\hospital\MedicalRecordRepo.class
+com\hospital\DoctorRepo.class
+com\hospital\MedicalRecord.class
+com\hospital\MedicalRecordRepository.class
+com\hospital\AppointmentRepo.class
+com\hospital\HospitalController.class
+com\hospital\HospitalApp.class

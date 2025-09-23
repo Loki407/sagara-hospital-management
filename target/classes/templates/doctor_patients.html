@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Patients - Doctor Portal</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .hero { background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 3rem 2rem; text-align: center; border-radius: 15px; margin-bottom: 2rem; }
+        .card { background: white; padding: 2rem; margin: 2rem 0; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .patient-card { background: #f8f9fa; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; border-left: 4px solid #28a745; }
+        .patient-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .patient-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .btn { padding: 0.8rem 1.5rem; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin: 0.2rem; }
+        .btn:hover { background: #218838; }
+        .btn-info { background: #17a2b8; }
+        .btn-info:hover { background: #138496; }
+        .search-box { width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; margin-bottom: 2rem; }
+        h2 { color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>⚕️ Doctor Portal</h2>
+        <div>
+            <span id="doctorName" style="margin-right: 1rem;">Doctor</span>
+            <a href="/doctor_dashboard">Dashboard</a>
+            <a href="/doctor_patients">Patients</a>
+            <a href="/doctor_appointments">Appointments</a>
+            <a href="/doctor_prescriptions">Prescriptions</a>
+            <a href="/doctor_records">Records</a>
+            <a href="/doctor_schedule">Schedule</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>My Patients</h1>
+            <p>Manage and view your patient records</p>
+        </div>
+
+        <div class="card">
+            <input type="text" class="search-box" placeholder="Search patients by name or email..." id="searchBox" onkeyup="searchPatients()">
+            
+            <div id="patientsList">
+                <div class="patient-card">
+                    <div class="patient-header">
+                        <h3>John Doe</h3>
+                        <div>
+                            <button class="btn btn-info" onclick="viewRecords('patient@demo.com')">View Records</button>
+                            <button class="btn" onclick="addRecord('John Doe', 'patient@demo.com')">Add Record</button>
+                        </div>
+                    </div>
+                    <div class="patient-info">
+                        <div><strong>Email:</strong> patient@demo.com</div>
+                        <div><strong>Last Visit:</strong> 2024-02-10</div>
+                        <div><strong>Condition:</strong> Hypertension</div>
+                        <div><strong>Status:</strong> <span style="color: #28a745;">Active</span></div>
+                    </div>
+                </div>
+
+                <div class="patient-card">
+                    <div class="patient-header">
+                        <h3>Jane Smith</h3>
+                        <div>
+                            <button class="btn btn-info" onclick="viewRecords('jane.smith@email.com')">View Records</button>
+                            <button class="btn" onclick="addRecord('Jane Smith', 'jane.smith@email.com')">Add Record</button>
+                        </div>
+                    </div>
+                    <div class="patient-info">
+                        <div><strong>Email:</strong> jane.smith@email.com</div>
+                        <div><strong>Last Visit:</strong> 2024-02-05</div>
+                        <div><strong>Condition:</strong> Eczema</div>
+                        <div><strong>Status:</strong> <span style="color: #28a745;">Active</span></div>
+                    </div>
+                </div>
+
+                <div class="patient-card">
+                    <div class="patient-header">
+                        <h3>Mike Johnson</h3>
+                        <div>
+                            <button class="btn btn-info" onclick="viewRecords('mike.johnson@email.com')">View Records</button>
+                            <button class="btn" onclick="addRecord('Mike Johnson', 'mike.johnson@email.com')">Add Record</button>
+                        </div>
+                    </div>
+                    <div class="patient-info">
+                        <div><strong>Email:</strong> mike.johnson@email.com</div>
+                        <div><strong>Last Visit:</strong> 2024-01-25</div>
+                        <div><strong>Condition:</strong> Migraine</div>
+                        <div><strong>Status:</strong> <span style="color: #28a745;">Active</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        // Load doctor profile
+        const currentDoctor = JSON.parse(localStorage.getItem('currentDoctor') || '{}');
+        if (currentDoctor.firstName && currentDoctor.lastName) {
+            document.getElementById('doctorName').textContent = `Dr. ${currentDoctor.firstName} ${currentDoctor.lastName}`;
+        } else {
+            window.location.href = '/login';
+        }
+
+        function logout() {
+            localStorage.removeItem('currentDoctor');
+            window.location.href = '/login';
+        }
+
+        function searchPatients() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const patientCards = document.querySelectorAll('.patient-card');
+            
+            patientCards.forEach(card => {
+                const patientName = card.querySelector('h3').textContent.toLowerCase();
+                const patientEmail = card.querySelector('.patient-info div').textContent.toLowerCase();
+                
+                if (patientName.includes(searchTerm) || patientEmail.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function viewRecords(email) {
+            // Store patient email for records page
+            localStorage.setItem('viewingPatientEmail', email);
+            window.location.href = '/medical_records';
+        }
+
+        function addRecord(name, email) {
+            // Pre-fill medical record form
+            localStorage.setItem('newRecordPatient', JSON.stringify({
+                name: name,
+                email: email
+            }));
+            window.location.href = '/medical_records';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact & Location - City General Hospital</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .hero { background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; padding: 4rem 2rem; text-align: center; border-radius: 15px; margin-bottom: 3rem; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 2rem 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .contact-item { display: flex; align-items: center; margin: 1.5rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; }
+        .contact-icon { font-size: 2rem; margin-right: 1rem; width: 60px; text-align: center; }
+        .contact-info h4 { margin: 0 0 0.5rem 0; color: #007bff; }
+        .contact-info p { margin: 0; color: #666; }
+        .hours-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .hours-table th, .hours-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        .hours-table th { background: #007bff; color: white; }
+        .emergency-card { background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 2rem; border-radius: 15px; text-align: center; margin: 2rem 0; }
+        .map-container { background: #e9ecef; height: 300px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 1.2rem; }
+        .directions-list { list-style: none; padding: 0; }
+        .directions-list li { padding: 0.8rem; margin: 0.5rem 0; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff; }
+        h2 { color: #007bff; }
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .hero h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>⚕️ City General Hospital</h2>
+        <div>
+            <a href="/">Home</a>
+            <a href="/about">About Us</a>
+            <a href="/services">Services</a>
+            <a href="/contact">Contact</a>
+            <a href="/login">Patient Portal</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Contact & Location</h1>
+            <p>Find us, reach us, visit us - We're here for you 24/7</p>
+        </div>
+
+        <div class="emergency-card">
+            <h2 style="color: white; margin: 0 0 1rem 0;">🚨 Emergency: Call 911</h2>
+            <p style="margin: 0; font-size: 1.1rem;">For life-threatening emergencies, call 911 immediately</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="card">
+                <h2>Contact Information</h2>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-info">
+                        <h4>Address</h4>
+                        <p>123 Medical Center Drive<br>
+                        Healthcare City, HC 12345</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-info">
+                        <h4>Main Phone</h4>
+                        <p>(555) 123-4567</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">🚑</div>
+                    <div class="contact-info">
+                        <h4>Emergency</h4>
+                        <p>911 or (555) 123-HELP</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-info">
+                        <h4>Email</h4>
+                        <p>info@citygeneral.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">🌐</div>
+                    <div class="contact-info">
+                        <h4>Website</h4>
+                        <p>www.citygeneral.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Hospital Hours</h2>
+                <table class="hours-table">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Emergency Department</strong></td>
+                            <td>24/7</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Main Hospital</strong></td>
+                            <td>24/7</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Outpatient Clinics</strong></td>
+                            <td>Mon-Fri: 7:00 AM - 7:00 PM<br>Sat: 8:00 AM - 4:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Laboratory</strong></td>
+                            <td>Mon-Fri: 6:00 AM - 10:00 PM<br>Weekends: 8:00 AM - 6:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Radiology</strong></td>
+                            <td>Mon-Fri: 7:00 AM - 9:00 PM<br>Weekends: 8:00 AM - 5:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pharmacy</strong></td>
+                            <td>Mon-Fri: 7:00 AM - 9:00 PM<br>Weekends: 9:00 AM - 5:00 PM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Location & Directions</h2>
+            <div class="map-container">
+                🗺️ Interactive Map Coming Soon<br>
+                <small>Use GPS coordinates: 40.7128° N, 74.0060° W</small>
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Driving Directions</h3>
+            <ul class="directions-list">
+                <li><strong>From Downtown:</strong> Take Highway 101 North, exit at Medical Center Drive</li>
+                <li><strong>From Airport:</strong> Take Airport Expressway to Highway 101 South, exit Medical Center Drive</li>
+                <li><strong>From North:</strong> Take Highway 101 South, exit at Medical Center Drive</li>
+                <li><strong>Public Transit:</strong> Bus routes 15, 23, and 45 stop at Medical Center Station</li>
+            </ul>
+        </div>
+
+        <div class="contact-grid">
+            <div class="card">
+                <h2>Parking Information</h2>
+                <div class="contact-item">
+                    <div class="contact-icon">🅿️</div>
+                    <div class="contact-info">
+                        <h4>Patient Parking</h4>
+                        <p>Free for first 2 hours<br>$2/hour after<br>Valet available</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">♿</div>
+                    <div class="contact-info">
+                        <h4>Accessibility</h4>
+                        <p>Handicap accessible parking<br>Wheelchair accessible entrances<br>Elevator access to all floors</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Visitor Information</h2>
+                <div class="contact-item">
+                    <div class="contact-icon">🕐</div>
+                    <div class="contact-info">
+                        <h4>Visiting Hours</h4>
+                        <p>General: 8:00 AM - 8:00 PM<br>ICU: 10:00 AM - 2:00 PM, 6:00 PM - 8:00 PM</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">👥</div>
+                    <div class="contact-info">
+                        <h4>Visitor Policy</h4>
+                        <p>2 visitors per patient<br>ID required<br>Children under 12 restricted in ICU</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+</body>
+</html>

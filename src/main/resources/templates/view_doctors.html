@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Doctors</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .doctors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .doctor-card { background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.3s; }
+        .doctor-card:hover { transform: translateY(-5px); }
+        .doctor-image { height: 150px; background: linear-gradient(45deg, #007bff, #28a745); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold; }
+        .doctor-info { padding: 1.5rem; }
+        .doctor-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .doctor-specialty { color: #007bff; font-weight: 500; margin-bottom: 0.5rem; }
+        .doctor-email { color: #666; margin-bottom: 1rem; }
+        .btn { width: 100%; padding: 0.8rem; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .btn:hover { background: #0056b3; }
+        h1 { text-align: center; color: #333; margin: 2rem 0; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>🏥 Hospital</h2>
+        <div>
+            <a href="/view_doctors">View Doctors</a>
+            <a href="/login">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Our Medical Team</h1>
+        <div class="doctors-grid" id="doctorsGrid">
+            <div style="text-align: center; padding: 2rem;">Loading doctors...</div>
+        </div>
+    </div>
+
+    <script>
+        loadDoctors();
+
+        async function loadDoctors() {
+            try {
+                const doctors = await fetch('/api/doctors').then(r => r.json());
+                displayDoctors(doctors);
+            } catch (error) {
+                document.getElementById('doctorsGrid').innerHTML = '<div style="text-align: center; color: red;">Failed to load doctors</div>';
+            }
+        }
+
+        function displayDoctors(doctors) {
+            const grid = document.getElementById('doctorsGrid');
+            
+            if (doctors.length === 0) {
+                grid.innerHTML = '<div style="text-align: center;">No doctors found</div>';
+                return;
+            }
+
+            grid.innerHTML = doctors.map(doctor => `
+                <div class="doctor-card">
+                    <div class="doctor-image">
+                        ${doctor.firstName.charAt(0)}${doctor.lastName.charAt(0)}
+                    </div>
+                    <div class="doctor-info">
+                        <h3 class="doctor-name">Dr. ${doctor.firstName} ${doctor.lastName}</h3>
+                        <p class="doctor-specialty">${doctor.specialty}</p>
+                        <p class="doctor-email">${doctor.email}</p>
+                        <button class="btn" onclick="bookAppointment(${doctor.id})">Book Appointment</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function bookAppointment(doctorId) {
+            localStorage.setItem('selectedDoctorId', doctorId);
+            window.location.href = '/book_appointment';
+        }
+    </script>
+</body>
+</html>

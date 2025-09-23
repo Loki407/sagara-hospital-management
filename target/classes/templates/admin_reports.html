@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Reports</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .card { background: white; padding: 2rem; margin: 2rem 0; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 3rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .stat-label { font-size: 1.1rem; opacity: 0.9; }
+        .chart-container { background: white; padding: 2rem; border-radius: 10px; margin: 1rem 0; }
+        h1, h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>⚕️ Admin Reports</h2>
+        <div>
+            <a href="/admin_dashboard">Dashboard</a>
+            <a href="/admin_doctors">Doctors</a>
+            <a href="/medical_records">Records</a>
+            <a href="/admin_reports">Reports</a>
+            <a href="/login">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Hospital Analytics Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalDoctors">0</div>
+                <div class="stat-label">Total Doctors</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" id="totalAppointments">0</div>
+                <div class="stat-label">Total Appointments</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" id="totalRecords">0</div>
+                <div class="stat-label">Medical Records</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" id="todayAppointments">0</div>
+                <div class="stat-label">Today's Appointments</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Appointment Status Breakdown</h2>
+            <div id="statusChart">
+                <div style="display: flex; justify-content: space-around; text-align: center; padding: 2rem;">
+                    <div>
+                        <div style="font-size: 2rem; color: #28a745;" id="confirmedCount">0</div>
+                        <div>Confirmed</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; color: #007bff;" id="completedCount">0</div>
+                        <div>Completed</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; color: #dc3545;" id="cancelledCount">0</div>
+                        <div>Cancelled</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Doctor Specialties</h2>
+            <div id="specialtyChart">Loading...</div>
+        </div>
+
+        <div class="card">
+            <h2>Recent Activity</h2>
+            <div id="recentActivity">Loading...</div>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        loadReports();
+        
+        async function loadReports() {
+            try {
+                // Load all data
+                const [doctors, appointments] = await Promise.all([
+                    fetch('/api/doctors').then(r => r.json()),
+                    fetch('/api/appointments').then(r => r.json())
+                ]);
+                
+                // Update stats
+                document.getElementById('totalDoctors').textContent = doctors.length;
+                document.getElementById('totalAppointments').textContent = appointments.length;
+                
+                // Today's appointments
+                const today = new Date().toISOString().split('T')[0];
+                const todayAppts = appointments.filter(a => a.appointmentDate === today);
+                document.getElementById('todayAppointments').textContent = todayAppts.length;
+                
+                // Status breakdown
+                const confirmed = appointments.filter(a => a.status === 'Confirmed').length;
+                const completed = appointments.filter(a => a.status === 'Completed').length;
+                const cancelled = appointments.filter(a => a.status === 'Cancelled').length;
+                
+                document.getElementById('confirmedCount').textContent = confirmed;
+                document.getElementById('completedCount').textContent = completed;
+                document.getElementById('cancelledCount').textContent = cancelled;
+                
+                // Specialty breakdown
+                const specialties = {};
+                doctors.forEach(d => {
+                    specialties[d.specialty] = (specialties[d.specialty] || 0) + 1;
+                });
+                
+                document.getElementById('specialtyChart').innerHTML = Object.entries(specialties)
+                    .map(([specialty, count]) => `
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: 1px solid #eee;">
+                            <span>${specialty}</span>
+                            <strong>${count} doctors</strong>
+                        </div>
+                    `).join('');
+                
+                // Recent activity
+                const recentAppts = appointments.slice(-5).reverse();
+                document.getElementById('recentActivity').innerHTML = recentAppts.map(a => `
+                    <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+                        <strong>${a.patientName}</strong> - ${a.appointmentDate} at ${a.appointmentTime}
+                        <span style="float: right; color: ${getStatusColor(a.status)}">${a.status}</span>
+                    </div>
+                `).join('') || '<p>No recent appointments</p>';
+                
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            }
+        }
+        
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Confirmed': return '#28a745';
+                case 'Completed': return '#007bff';
+                case 'Cancelled': return '#dc3545';
+                default: return '#666';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f5f5f5; min-height: 100vh; }
+        body.dark { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .navbar { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        body.dark .navbar { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+        .card { background: white; padding: 2rem; margin: 2rem 0; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        body.dark .card { background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); backdrop-filter: blur(10px); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1.5rem; box-sizing: border-box; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input, .form-group select { width: calc(92% - 2rem); padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; transition: all 0.3s; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus { border-color: #007bff; box-shadow: 0 0 0 3px rgba(0,123,255,0.1); outline: none; transform: translateY(-2px); }
+        .btn { padding: 1rem 2rem; background: linear-gradient(45deg, #007bff, #0056b3); color: white; border: none; border-radius: 12px; cursor: pointer; margin: 0.5rem; font-size: 1.1rem; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,123,255,0.3); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,123,255,0.4); }
+        .btn-secondary { background: linear-gradient(45deg, #6c757d, #495057); box-shadow: 0 4px 15px rgba(108,117,125,0.3); }
+        .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(108,117,125,0.4); }
+        h1, h2 { color: #333; }
+        .section-title { border-bottom: 3px solid #007bff; padding-bottom: 0.8rem; margin-bottom: 2rem; color: #333; font-weight: 600; }
+        .hero-section { text-align: center; color: #333; margin: 2rem 0; }
+        .hero-title { font-size: 2.5rem; margin-bottom: 1rem; color: #333; }
+        .hero-subtitle { font-size: 1.2rem; opacity: 0.7; margin-bottom: 2rem; color: #666; }
+        body.dark .hero-section { color: white; }
+        body.dark .hero-title { color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        body.dark .hero-subtitle { color: white; opacity: 0.9; }
+        .form-group label { font-weight: 600; color: #333; margin-bottom: 0.8rem; }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>⚕️ Book Appointment</h2>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div id="navProfile" style="display: flex; align-items: center; gap: 0.5rem; margin-right: 1rem;">
+                <img id="navProfilePic" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAzNSAzNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjM1IiBoZWlnaHQ9IjM1IiBmaWxsPSIjMDA3YmZmIi8+Cjx0ZXh0IHg9IjE3LjUiIHk9IjIyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QPC90ZXh0Pgo8L3N2Zz4=" alt="Profile">
+                <span id="navProfileName" style="color: white; font-size: 0.9rem;">Patient</span>
+            </div>
+            <a href="/patient_dashboard">Dashboard</a>
+            <a href="/patient_doctors">Find Doctors</a>
+            <a href="/book_appointment">Book Appointment</a>
+            <a href="/patient_records">My Records</a>
+            <a href="/patient_profile">Profile</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">Book Your Appointment</h1>
+            <p class="hero-subtitle">Schedule your visit with our expert medical professionals</p>
+        </div>
+        
+        <div class="card">
+            
+            <form id="appointmentForm">
+                <h3 class="section-title">Patient Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="patientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="patientEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="patientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="patientAge" min="1" max="120">
+                    </div>
+                </div>
+
+                <h3 class="section-title">Appointment Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Select Doctor</label>
+                        <select id="doctorSelect" required>
+                            <option value="">Loading doctors...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Appointment Date</label>
+                        <input type="date" id="appointmentDate" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Appointment Time</label>
+                        <select id="appointmentTime" required>
+                            <option value="">Select time...</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Appointment Type</label>
+                        <select id="appointmentType">
+                            <option value="consultation">Consultation</option>
+                            <option value="follow-up">Follow-up</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                    <button type="submit" class="btn">Book Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        loadDoctors();
+        loadPatientInfo();
+        
+        // Set minimum date to today
+        document.getElementById('appointmentDate').min = new Date().toISOString().split('T')[0];
+        
+        function loadPatientInfo() {
+            const profile = JSON.parse(localStorage.getItem('patientProfile') || '{}');
+            const saved = localStorage.getItem('profilePicture');
+            
+            if (profile.firstName && profile.lastName) {
+                document.getElementById('patientName').value = `${profile.firstName} ${profile.lastName}`;
+                document.getElementById('navProfileName').textContent = `${profile.firstName} ${profile.lastName}`;
+            }
+            if (profile.email) {
+                document.getElementById('patientEmail').value = profile.email;
+            }
+            if (saved) {
+                document.getElementById('navProfilePic').src = saved;
+            }
+        }
+
+        async function loadDoctors() {
+            try {
+                const doctors = await fetch('/api/doctors').then(r => r.json());
+                const select = document.getElementById('doctorSelect');
+                
+                select.innerHTML = '<option value="">Choose a doctor...</option>';
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = `Dr. ${doctor.firstName} ${doctor.lastName} - ${doctor.specialty}`;
+                    select.appendChild(option);
+                });
+
+                // Check if a doctor was pre-selected
+                const selectedDoctorId = localStorage.getItem('selectedDoctorId');
+                if (selectedDoctorId) {
+                    select.value = selectedDoctorId;
+                    localStorage.removeItem('selectedDoctorId');
+                }
+            } catch (error) {
+                document.getElementById('doctorSelect').innerHTML = '<option value="">Error loading doctors</option>';
+            }
+        }
+
+        document.getElementById('appointmentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const appointmentData = {
+                patientName: document.getElementById('patientName').value,
+                patientEmail: document.getElementById('patientEmail').value,
+                patientPhone: document.getElementById('patientPhone').value,
+                doctorId: parseInt(document.getElementById('doctorSelect').value),
+                appointmentDate: document.getElementById('appointmentDate').value,
+                appointmentTime: document.getElementById('appointmentTime').value
+            };
+            
+            try {
+                const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(appointmentData)
+                });
+                
+                if (response.ok) {
+                    const successDiv = document.createElement('div');
+                    successDiv.innerHTML = `
+                        <div style="background: linear-gradient(45deg, #28a745, #20c997); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; margin: 1rem 0; animation: slideIn 0.5s ease-out;">
+                            <h3>✅ Appointment Booked Successfully!</h3>
+                            <p>You will receive a confirmation email shortly.</p>
+                        </div>
+                    `;
+                    document.querySelector('.card').insertBefore(successDiv, document.getElementById('appointmentForm'));
+                    
+                    document.getElementById('appointmentForm').reset();
+                    loadDoctors();
+                    loadPatientInfo();
+                    
+                    setTimeout(() => successDiv.remove(), 5000);
+                } else {
+                    alert('Failed to book appointment');
+                }
+            } catch (error) {
+                alert('Error booking appointment');
+            }
+        };
+        
+        function logout() {
+            localStorage.removeItem('hospitalUser');
+            localStorage.removeItem('patientProfile');
+            localStorage.removeItem('profilePicture');
+            window.location.href = '/login';
+        }nt.getElementById('appointmentTime').value
+            };
+            
+            try {
+                const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(appointmentData)
+                });
+                
+                if (response.ok) {
+                    // Show success message with animation
+                    const successDiv = document.createElement('div');
+                    successDiv.innerHTML = `
+                        <div style="background: linear-gradient(45deg, #28a745, #20c997); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; margin: 1rem 0; animation: slideIn 0.5s ease-out;">
+                            <h3>✅ Appointment Booked Successfully!</h3>
+                            <p>You will receive a confirmation email shortly.</p>
+                        </div>
+                    `;
+                    document.querySelector('.card').insertBefore(successDiv, document.getElementById('appointmentForm'));
+                    
+                    document.getElementById('appointmentForm').reset();
+                    loadDoctors();
+                    
+                    // Remove success message after 5 seconds
+                    setTimeout(() => successDiv.remove(), 5000);
+                } else {
+                    alert('Failed to book appointment');
+                }
+            } catch (error) {
+                alert('Error booking appointment');
+            }
+        };
+    </script>
+</body>
+</html>

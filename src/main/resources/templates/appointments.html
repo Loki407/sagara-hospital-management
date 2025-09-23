@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .nav { background: #333; padding: 20px; margin: -40px -40px 40px -40px; }
+        .nav a { color: white; text-decoration: none; margin-right: 20px; }
+        .form { background: #f5f5f5; padding: 20px; border-radius: 8px; }
+        input, select { width: 100%; padding: 8px; margin: 5px 0 15px 0; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/">Home</a>
+        <a href="/doctors">Doctors</a>
+        <a href="/appointments">Book Appointment</a>
+        <a href="/admin">Admin</a>
+    </div>
+    
+    <h1>Book Appointment</h1>
+    
+    <div class="form">
+        <form id="appointmentForm">
+            <label>Patient Name:</label>
+            <input type="text" id="patientName" required>
+            
+            <label>Email:</label>
+            <input type="email" id="patientEmail" required>
+            
+            <label>Phone:</label>
+            <input type="tel" id="patientPhone" required>
+            
+            <label>Doctor:</label>
+            <select id="doctorId" required>
+                <option value="">Select Doctor...</option>
+            </select>
+            
+            <label>Date:</label>
+            <input type="date" id="appointmentDate" required>
+            
+            <label>Time:</label>
+            <input type="time" id="appointmentTime" required>
+            
+            <button type="submit" class="btn">Book Appointment</button>
+        </form>
+    </div>
+    
+    <script>
+        // Load doctors
+        fetch('/api/doctors')
+        .then(r => r.json())
+        .then(doctors => {
+            const select = document.getElementById('doctorId');
+            doctors.forEach(d => {
+                select.innerHTML += `<option value="${d.id}">Dr. ${d.firstName} ${d.lastName} - ${d.specialty}</option>`;
+            });
+        });
+        
+        // Book appointment
+        document.getElementById('appointmentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const appointment = {
+                patientName: document.getElementById('patientName').value,
+                patientEmail: document.getElementById('patientEmail').value,
+                patientPhone: document.getElementById('patientPhone').value,
+                doctorId: parseInt(document.getElementById('doctorId').value),
+                appointmentDate: document.getElementById('appointmentDate').value,
+                appointmentTime: document.getElementById('appointmentTime').value
+            };
+            
+            try {
+                const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(appointment)
+                });
+                
+                if (response.ok) {
+                    alert('Appointment booked successfully!');
+                    document.getElementById('appointmentForm').reset();
+                } else {
+                    alert('Failed to book appointment');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        };
+    </script>
+</body>
+</html>

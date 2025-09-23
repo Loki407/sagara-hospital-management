@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .hero { background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 3rem 2rem; text-align: center; border-radius: 15px; margin-bottom: 2rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .stat-card { background: white; padding: 2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .stat-number { font-size: 3rem; font-weight: bold; color: #28a745; margin-bottom: 0.5rem; }
+        .stat-label { color: #666; font-size: 1.1rem; }
+        .card { background: white; padding: 2rem; margin: 2rem 0; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .appointment-item { background: #f8f9fa; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; border-left: 4px solid #28a745; display: flex; justify-content: space-between; align-items: center; }
+        .btn { padding: 0.8rem 1.5rem; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn:hover { background: #218838; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        h2 { color: #28a745; margin-bottom: 1.5rem; }
+        .profile-section { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+        .profile-pic { width: 80px; height: 80px; border-radius: 50%; background: #28a745; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>⚕️ Doctor Portal</h2>
+        <div>
+            <span id="doctorName" style="margin-right: 1rem;">Dr. Smith</span>
+            <a href="/doctor_dashboard">Dashboard</a>
+            <a href="/doctor_patients">Patients</a>
+            <a href="/doctor_appointments">Appointments</a>
+            <a href="/doctor_prescriptions">Prescriptions</a>
+            <a href="/doctor_records">Records</a>
+            <a href="/doctor_schedule">Schedule</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Welcome, <span id="heroName">Doctor</span></h1>
+            <p>Manage your patients and appointments efficiently</p>
+        </div>
+
+        <div class="card">
+            <div class="profile-section">
+                <div class="profile-pic" id="doctorInitials">DR</div>
+                <div>
+                    <h3 id="profileName">Dr. John Smith</h3>
+                    <p style="color: #666; margin: 0;">Cardiology Specialist</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="todayAppointments">8</div>
+                <div class="stat-label">Today's Appointments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalPatients">45</div>
+                <div class="stat-label">Total Patients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingReports">12</div>
+                <div class="stat-label">Pending Reports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completedToday">5</div>
+                <div class="stat-label">Completed Today</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Today's Appointments</h2>
+            <div id="appointmentsList">
+                <div class="appointment-item">
+                    <div>
+                        <strong>John Doe</strong><br>
+                        <small>9:00 AM - Consultation</small>
+                    </div>
+                    <div>
+                        <button class="btn">Complete</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+                <div class="appointment-item">
+                    <div>
+                        <strong>Jane Smith</strong><br>
+                        <small>10:30 AM - Follow-up</small>
+                    </div>
+                    <div>
+                        <button class="btn">Complete</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+                <div class="appointment-item">
+                    <div>
+                        <strong>Mike Johnson</strong><br>
+                        <small>2:00 PM - Check-up</small>
+                    </div>
+                    <div>
+                        <button class="btn">Complete</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Quick Actions</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <a href="/doctor_patients" class="btn" style="text-align: center; padding: 2rem;">
+                    👥<br>View Patients
+                </a>
+                <a href="/doctor_appointments" class="btn" style="text-align: center; padding: 2rem;">
+                    📅<br>Appointments
+                </a>
+                <a href="/doctor_prescriptions" class="btn" style="text-align: center; padding: 2rem;">
+                    💊<br>Prescriptions
+                </a>
+                <a href="/doctor_records" class="btn" style="text-align: center; padding: 2rem;">
+                    📋<br>Medical Records
+                </a>
+                <a href="/doctor_schedule" class="btn" style="text-align: center; padding: 2rem;">
+                    🗓️<br>My Schedule
+                </a>
+                <a href="#" class="btn" style="text-align: center; padding: 2rem;">
+                    📊<br>Reports
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        // Load doctor profile
+        const currentDoctor = JSON.parse(localStorage.getItem('currentDoctor') || '{}');
+        if (currentDoctor.firstName && currentDoctor.lastName) {
+            const fullName = `Dr. ${currentDoctor.firstName} ${currentDoctor.lastName}`;
+            document.getElementById('doctorName').textContent = fullName;
+            document.getElementById('heroName').textContent = fullName;
+            document.getElementById('profileName').textContent = fullName;
+            
+            // Set initials
+            const initials = `${currentDoctor.firstName[0]}${currentDoctor.lastName[0]}`;
+            document.getElementById('doctorInitials').textContent = initials;
+        } else {
+            window.location.href = '/login';
+        }
+
+        function logout() {
+            localStorage.removeItem('currentDoctor');
+            window.location.href = '/login';
+        }
+
+        // Simulate loading appointments and stats
+        loadDoctorStats();
+
+        function loadDoctorStats() {
+            // In real app, fetch from API
+            const stats = {
+                todayAppointments: Math.floor(Math.random() * 15) + 5,
+                totalPatients: Math.floor(Math.random() * 100) + 30,
+                pendingReports: Math.floor(Math.random() * 20) + 5,
+                completedToday: Math.floor(Math.random() * 10) + 2
+            };
+
+            document.getElementById('todayAppointments').textContent = stats.todayAppointments;
+            document.getElementById('totalPatients').textContent = stats.totalPatients;
+            document.getElementById('pendingReports').textContent = stats.pendingReports;
+            document.getElementById('completedToday').textContent = stats.completedToday;
+        }
+    </script>
+</body>
+</html>
