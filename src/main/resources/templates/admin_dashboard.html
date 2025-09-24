@@ -27,7 +27,6 @@
         <div>
             <a href="/admin_dashboard">Dashboard</a>
             <a href="/admin_doctors">View Doctors</a>
-            <a href="/medical_records">Medical Records</a>
             <a href="/admin_reports">Reports</a>
             <a href="/login">Logout</a>
         </div>
@@ -69,6 +68,11 @@
         <div class="card">
             <h2>Recent Appointments</h2>
             <div id="appointmentsList">Loading...</div>
+        </div>
+
+        <div class="card">
+            <h2>Patient Schedules</h2>
+            <div id="schedulesList">Loading...</div>
         </div>
     </div>
 
@@ -115,6 +119,39 @@
                         </div>
                     </div>`
                 ).join('');
+            });
+
+            // Load patient schedules
+            fetch('/api/patient-schedule/all')
+            .then(r => r.json())
+            .then(schedules => {
+                document.getElementById('schedulesList').innerHTML = schedules.map(s => {
+                    const date = new Date(s.appointmentDateTime);
+                    const statusColor = s.status === 'Completed' ? '#28a745' : s.status === 'Scheduled' ? '#007bff' : '#6c757d';
+                    return `<div class="appointment-item" style="border-left: 4px solid ${statusColor};">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>${s.patientName} - ${s.appointmentType}</h4>
+                                <p>Doctor: ${s.doctorName} | Location: ${s.location}</p>
+                                <p>Date: ${date.toLocaleDateString()} | Time: ${date.toLocaleTimeString()}</p>
+                                <p>Status: <span style="color: ${statusColor}; font-weight: bold;">${s.status}</span></p>
+                                ${s.notes ? `<p>Notes: ${s.notes}</p>` : ''}
+                            </div>
+                            <div>
+                                <select onchange="updateScheduleStatus(${s.id}, this.value)" style="margin-right: 0.5rem; padding: 0.5rem;">
+                                    <option value="Scheduled" ${s.status === 'Scheduled' ? 'selected' : ''}>Scheduled</option>
+                                    <option value="Completed" ${s.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                    <option value="Cancelled" ${s.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                                <button class="btn btn-danger" onclick="deleteSchedule(${s.id})">Delete</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            })
+            .catch(error => {
+                console.error('Error loading schedules:', error);
+                document.getElementById('schedulesList').innerHTML = '<p>No patient schedules found.</p>';
             });
         }
 
@@ -211,6 +248,37 @@
                 loadData();
             } catch (error) {
                 alert('Error updating status');
+            }
+        }
+        
+        async function updateScheduleStatus(id, status) {
+            try {
+                const schedules = await fetch('/api/patient-schedule/all').then(r => r.json());
+                const schedule = schedules.find(s => s.id === id);
+                if (schedule) {
+                    schedule.status = status;
+                    await fetch(`/api/patient-schedule/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(schedule)
+                    });
+                    alert('Schedule status updated!');
+                    loadData();
+                }
+            } catch (error) {
+                alert('Error updating schedule status');
+            }
+        }
+        
+        async function deleteSchedule(id) {
+            if (confirm('Delete this schedule?')) {
+                try {
+                    await fetch(`/api/patient-schedule/${id}`, { method: 'DELETE' });
+                    alert('Schedule deleted!');
+                    loadData();
+                } catch (error) {
+                    alert('Error deleting schedule');
+                }
             }
         }
     </script>

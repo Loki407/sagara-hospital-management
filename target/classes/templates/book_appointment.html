@@ -161,25 +161,39 @@
 
         async function loadDoctors() {
             try {
-                const doctors = await fetch('/api/doctors').then(r => r.json());
-                const select = document.getElementById('doctorSelect');
+                console.log('Loading doctors...');
+                const response = await fetch('/api/doctors');
+                console.log('Response status:', response.status);
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const doctors = await response.json();
+                console.log('Doctors loaded:', doctors);
+                
+                const select = document.getElementById('doctorSelect');
                 select.innerHTML = '<option value="">Choose a doctor...</option>';
-                doctors.forEach(doctor => {
-                    const option = document.createElement('option');
-                    option.value = doctor.id;
-                    option.textContent = `Dr. ${doctor.firstName} ${doctor.lastName} - ${doctor.specialty}`;
-                    select.appendChild(option);
-                });
+                
+                if (doctors && doctors.length > 0) {
+                    doctors.forEach(doctor => {
+                        const option = document.createElement('option');
+                        option.value = doctor.id;
+                        option.textContent = `Dr. ${doctor.firstName} ${doctor.lastName} - ${doctor.specialty}`;
+                        select.appendChild(option);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No doctors available</option>';
+                }
 
-                // Check if a doctor was pre-selected
                 const selectedDoctorId = localStorage.getItem('selectedDoctorId');
                 if (selectedDoctorId) {
                     select.value = selectedDoctorId;
                     localStorage.removeItem('selectedDoctorId');
                 }
             } catch (error) {
-                document.getElementById('doctorSelect').innerHTML = '<option value="">Error loading doctors</option>';
+                console.error('Error loading doctors:', error);
+                document.getElementById('doctorSelect').innerHTML = '<option value="">Error loading doctors - Please refresh</option>';
             }
         }
 
@@ -230,39 +244,7 @@
             localStorage.removeItem('patientProfile');
             localStorage.removeItem('profilePicture');
             window.location.href = '/login';
-        }nt.getElementById('appointmentTime').value
-            };
-            
-            try {
-                const response = await fetch('/api/appointments', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(appointmentData)
-                });
-                
-                if (response.ok) {
-                    // Show success message with animation
-                    const successDiv = document.createElement('div');
-                    successDiv.innerHTML = `
-                        <div style="background: linear-gradient(45deg, #28a745, #20c997); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; margin: 1rem 0; animation: slideIn 0.5s ease-out;">
-                            <h3>✅ Appointment Booked Successfully!</h3>
-                            <p>You will receive a confirmation email shortly.</p>
-                        </div>
-                    `;
-                    document.querySelector('.card').insertBefore(successDiv, document.getElementById('appointmentForm'));
-                    
-                    document.getElementById('appointmentForm').reset();
-                    loadDoctors();
-                    
-                    // Remove success message after 5 seconds
-                    setTimeout(() => successDiv.remove(), 5000);
-                } else {
-                    alert('Failed to book appointment');
-                }
-            } catch (error) {
-                alert('Error booking appointment');
-            }
-        };
+        }
     </script>
 </body>
 </html>
