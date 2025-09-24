@@ -130,7 +130,7 @@
         function viewRecords(email) {
             // Store patient email for records page
             localStorage.setItem('viewingPatientEmail', email);
-            window.location.href = '/medical_records';
+            window.location.href = '/doctor_records';
         }
 
         function addRecord(name, email) {
@@ -139,7 +139,7 @@
                 name: name,
                 email: email
             }));
-            window.location.href = '/medical_records';
+            window.location.href = '/doctor_records';
         }
     </script>
 </body>

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Medical Records - Doctor Portal</title>
+    <link rel="stylesheet" href="/css/luxury-theme.css">
     <style>
         body { font-family: Arial; margin: 0; background: #f5f5f5; min-height: 100vh; }
         body.dark { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
@@ -105,9 +106,9 @@
                     <textarea id="notes" rows="4" placeholder="Additional notes, observations, follow-up instructions..."></textarea>
                 </div>
                 
-                <div style="text-align: right; margin-top: 1rem;">
-                    <button type="button" class="btn" onclick="closeRecordModal()">Cancel</button>
-                    <button type="submit" class="btn btn-success">Save Record</button>
+                <div style="text-align: right; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <button type="button" class="btn" onclick="closeRecordModal()" style="margin-right: 1rem;">Cancel</button>
+                    <button type="submit" class="btn btn-success" style="font-weight: bold; padding: 1rem 2rem; font-size: 1.1rem;">💾 Save Medical Record</button>
                 </div>
             </form>
         </div>

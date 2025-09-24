@@ -270,17 +270,13 @@
                 return;
             }
             
-            // Check credentials
-            let user = credentials[username];
-            if (!user || username !== user.username || password !== user.password) {
-                showError('Invalid credentials. Please check username, password, and role.');
-                return;
-            }
-            
-            // Validate role matches
-            if (role === 'doctor' && !user.role) {
-                showError('Invalid doctor credentials.');
-                return;
+            // For admin, check hardcoded credentials
+            if (role === 'admin') {
+                let user = credentials[username];
+                if (!user || username !== user.username || password !== user.password) {
+                    showError('Invalid admin credentials.');
+                    return;
+                }
             }
             
             // Show loading
@@ -316,76 +312,57 @@
                 if (role === 'admin') {
                     window.location.href = '/admin_dashboard';
                 } else if (role === 'doctor') {
-                    // Try API authentication
+                    // API authentication for doctors (including newly registered)
                     fetch('/api/auth/doctor', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
-                    }).then(r => r.json()).then(data => {
-                        if (data && data.firstName) {
-                            localStorage.setItem('currentDoctor', JSON.stringify(data));
-                            window.location.href = '/doctor_dashboard';
-                        } else if (user && user.role === 'doctor') {
-                            localStorage.setItem('currentDoctor', JSON.stringify({
-                                firstName: user.name.split(' ')[1],
-                                lastName: user.name.split(' ')[2] || '',
-                                username: user.username
-                            }));
-                            window.location.href = '/doctor_dashboard';
+                    }).then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Authentication failed');
                         }
+                    }).then(data => {
+                        localStorage.setItem('currentDoctor', JSON.stringify(data));
+                        window.location.href = '/doctor_dashboard';
                     }).catch(() => {
-                        if (user && user.role === 'doctor') {
-                            localStorage.setItem('currentDoctor', JSON.stringify({
-                                firstName: user.name.split(' ')[1],
-                                lastName: user.name.split(' ')[2] || '',
-                                username: user.username
-                            }));
-                            window.location.href = '/doctor_dashboard';
-                        }
+                        showLoading(false);
+                        showError('Invalid doctor credentials.');
                     });
                 } else if (role === 'patient') {
-                    // Try API authentication
+                    // API authentication for patients (including newly registered)
                     fetch('/api/auth/patient', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
-                    }).then(r => r.json()).then(data => {
-                        if (data && data.firstName) {
-                            localStorage.setItem('currentPatient', JSON.stringify(data));
-                            localStorage.setItem('currentPatientEmail', data.email);
-                            window.location.href = '/patient_dashboard';
-                        } else if (user && user.email) {
-                            localStorage.setItem('currentPatient', JSON.stringify({
-                                firstName: user.name.split(' ')[0],
-                                lastName: user.name.split(' ')[1] || '',
-                                email: user.email,
-                                username: user.username
-                            }));
-                            localStorage.setItem('currentPatientEmail', user.email);
-                            window.location.href = '/patient_dashboard';
+                    }).then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Authentication failed');
                         }
+                    }).then(data => {
+                        localStorage.setItem('currentPatient', JSON.stringify(data));
+                        localStorage.setItem('currentPatientEmail', data.email);
+                        window.location.href = '/patient_dashboard';
                     }).catch(() => {
-                        if (user && user.email) {
-                            localStorage.setItem('currentPatient', JSON.stringify({
-                                firstName: user.name.split(' ')[0],
-                                lastName: user.name.split(' ')[1] || '',
-                                email: user.email,
-                                username: user.username
-                            }));
-                            localStorage.setItem('currentPatientEmail', user.email);
-                            window.location.href = '/patient_dashboard';
-                        }
+                        showLoading(false);
+                        showError('Invalid patient credentials.');
                     });
                 }
             }, 1000);
         });
         
-        // Auto-fill demo credentials on role selection
+        // Auto-fill demo credentials on role selection (admin only)
         document.getElementById('role').addEventListener('change', function() {
             const role = this.value;
-            if (role && credentials[role]) {
-                document.getElementById('username').value = credentials[role].username;
-                document.getElementById('password').value = credentials[role].password;
+            if (role === 'admin' && credentials.admin) {
+                document.getElementById('username').value = credentials.admin.username;
+                document.getElementById('password').value = credentials.admin.password;
+            } else {
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
             }
         });
         

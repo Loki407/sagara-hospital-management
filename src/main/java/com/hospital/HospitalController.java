@@ -476,7 +476,7 @@ public class HospitalController {
         }
     }
     
-    @GetMapping("/medical_records") public String medicalRecords() { return "medical_records"; }
+
     @GetMapping("/patient_records") public String patientRecords() { return "patient_records"; }
     @GetMapping("/admin_reports") public String adminReports() { return "admin_reports"; }
     @GetMapping("/demo") public String demoPatients() { return "demo_patients"; }
