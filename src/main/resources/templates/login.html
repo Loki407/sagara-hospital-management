@@ -282,8 +282,7 @@
             // Show loading
             showLoading(true);
             
-            // Simulate login delay
-            setTimeout(() => {
+            // Process login immediately
                 // Store user session
                 localStorage.setItem('hospitalUser', JSON.stringify({
                     username: username,
@@ -351,7 +350,6 @@
                         showError('Invalid patient credentials.');
                     });
                 }
-            }, 1000);
         });
         
         // Auto-fill demo credentials on role selection (admin only)
