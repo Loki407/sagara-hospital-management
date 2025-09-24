@@ -276,6 +276,62 @@ h1, h2, h3, h4, h5, h6 {
     animation: fadeInUp 0.6s ease-out;
 }
 
+/* Dark Mode Styles */
+body.dark {
+    --background-color: #0f0f23;
+    --card-background: rgba(26, 26, 26, 0.95);
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #999999;
+    --border-color: rgba(194, 162, 117, 0.2);
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+}
+
+body.dark .navbar {
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 1px solid rgba(194, 162, 117, 0.3);
+}
+
+body.dark .navbar h2,
+body.dark .navbar a {
+    color: #ffffff !important;
+    text-shadow: none;
+}
+
+body.dark .card {
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid rgba(194, 162, 117, 0.2);
+    color: var(--text-primary);
+}
+
+body.dark .btn-danger {
+    background: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+body.dark .btn-danger:hover {
+    background: #c82333 !important;
+}
+
+body.dark .form-group label {
+    color: var(--text-primary);
+}
+
+body.dark .form-group input,
+body.dark .form-group select,
+body.dark .form-group textarea {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(194, 162, 117, 0.3);
+    color: var(--text-primary);
+}
+
+body.dark .form-group input:focus,
+body.dark .form-group select:focus,
+body.dark .form-group textarea:focus {
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.15);
+}
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 3rem;
