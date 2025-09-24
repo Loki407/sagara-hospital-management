@@ -23,8 +23,8 @@
         .record-card { border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; background: #f9f9f9; }
         body.dark .record-card { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
         .record-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { background: white; margin: 5% auto; padding: 2rem; width: 80%; max-width: 600px; border-radius: 10px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow-y: auto; }
+        .modal-content { background: white; margin: 2rem auto; padding: 2rem; width: 90%; max-width: 600px; border-radius: 10px; max-height: 90vh; overflow-y: auto; }
         body.dark .modal-content { background: #333; color: white; }
         .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
         .close:hover { color: black; }
@@ -106,7 +106,7 @@
                     <textarea id="notes" rows="4" placeholder="Additional notes, observations, follow-up instructions..."></textarea>
                 </div>
                 
-                <div style="text-align: right; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <div style="text-align: right; margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; position: sticky; bottom: 0; z-index: 10;">
                     <button type="button" class="btn" onclick="closeRecordModal()" style="margin-right: 1rem;">Cancel</button>
                     <button type="submit" class="btn btn-success" style="font-weight: bold; padding: 1rem 2rem; font-size: 1.1rem;">💾 Save Medical Record</button>
                 </div>
