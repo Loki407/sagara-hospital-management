@@ -117,7 +117,7 @@
                 </div>
                 <div style="text-align: right; margin-top: 1rem;">
                     <button type="button" class="btn" onclick="closePrescriptionModal()">Cancel</button>
-                    <button type="submit" class="btn btn-success">Create Prescription</button>
+                    <button type="submit" class="btn btn-success" id="submitBtn">💾 Save Prescription</button>
                 </div>
             </form>
         </div>
@@ -204,9 +204,32 @@
             displayPrescriptions(filtered);
         }
 
+        let editingPrescriptionId = null;
+
         function openNewPrescriptionModal() {
+            editingPrescriptionId = null;
+            document.querySelector('#prescriptionModal h3').textContent = 'New Prescription';
+            document.getElementById('submitBtn').textContent = '💾 Create Prescription';
             document.getElementById('prescriptionModal').style.display = 'block';
             document.getElementById('prescriptionForm').reset();
+        }
+
+        function editPrescription(id) {
+            const prescription = prescriptions.find(p => p.id === id);
+            if (prescription) {
+                editingPrescriptionId = id;
+                document.getElementById('patientName').value = prescription.patientName;
+                document.getElementById('patientEmail').value = prescription.patientEmail;
+                document.getElementById('medication').value = prescription.medication;
+                document.getElementById('dosage').value = prescription.dosage;
+                document.getElementById('frequency').value = prescription.frequency;
+                document.getElementById('duration').value = prescription.duration;
+                document.getElementById('instructions').value = prescription.instructions || '';
+                
+                document.querySelector('#prescriptionModal h3').textContent = 'Edit Prescription';
+                document.getElementById('submitBtn').textContent = '💾 Update Prescription';
+                document.getElementById('prescriptionModal').style.display = 'block';
+            }
         }
 
         function closePrescriptionModal() {
@@ -229,22 +252,34 @@
             };
 
             try {
-                const response = await fetch('/api/prescriptions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(prescription)
-                });
+                let response;
+                if (editingPrescriptionId) {
+                    // Update existing prescription
+                    prescription.id = editingPrescriptionId;
+                    response = await fetch(`/api/prescriptions/${editingPrescriptionId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(prescription)
+                    });
+                } else {
+                    // Create new prescription
+                    response = await fetch('/api/prescriptions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(prescription)
+                    });
+                }
 
                 if (response.ok) {
                     closePrescriptionModal();
                     loadPrescriptions();
-                    alert('Prescription created successfully!');
+                    alert(editingPrescriptionId ? 'Prescription updated successfully!' : 'Prescription created successfully!');
                 } else {
-                    alert('Error creating prescription');
+                    alert(editingPrescriptionId ? 'Error updating prescription' : 'Error creating prescription');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error creating prescription');
+                alert(editingPrescriptionId ? 'Error updating prescription' : 'Error creating prescription');
             }
         });
 
