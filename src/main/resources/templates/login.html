@@ -282,74 +282,56 @@
             // Show loading
             showLoading(true);
             
-            // Process login immediately
-                // Store user session
-                localStorage.setItem('hospitalUser', JSON.stringify({
-                    username: username,
-                    role: role,
-                    loginTime: new Date().toISOString()
-                }));
-                
-                // Store patient profile if available
-                if (user.name && user.email) {
-                    localStorage.setItem('patientProfile', JSON.stringify({
-                        firstName: user.name.split(' ')[0],
-                        lastName: user.name.split(' ')[1] || '',
-                        email: user.email
-                    }));
-                }
-                
-                // Store doctor profile if available
-                if (user.role === 'doctor') {
-                    localStorage.setItem('doctorProfile', JSON.stringify({
-                        name: user.name,
-                        username: user.username
-                    }));
-                }
-                
-                // Redirect based on role with API authentication
-                if (role === 'admin') {
-                    window.location.href = '/admin_dashboard';
-                } else if (role === 'doctor') {
-                    // API authentication for doctors (including newly registered)
-                    fetch('/api/auth/doctor', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username, password })
-                    }).then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Authentication failed');
-                        }
-                    }).then(data => {
-                        localStorage.setItem('currentDoctor', JSON.stringify(data));
-                        window.location.href = '/doctor_dashboard';
-                    }).catch(() => {
-                        showLoading(false);
-                        showError('Invalid doctor credentials.');
-                    });
-                } else if (role === 'patient') {
-                    // API authentication for patients (including newly registered)
-                    fetch('/api/auth/patient', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username, password })
-                    }).then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error('Authentication failed');
-                        }
-                    }).then(data => {
-                        localStorage.setItem('currentPatient', JSON.stringify(data));
-                        localStorage.setItem('currentPatientEmail', data.email);
-                        window.location.href = '/patient_dashboard';
-                    }).catch(() => {
-                        showLoading(false);
-                        showError('Invalid patient credentials.');
-                    });
-                }
+            // Store user session
+            localStorage.setItem('hospitalUser', JSON.stringify({
+                username: username,
+                role: role,
+                loginTime: new Date().toISOString()
+            }));
+            
+            // Redirect based on role with API authentication
+            if (role === 'admin') {
+                window.location.href = '/admin_dashboard';
+            } else if (role === 'doctor') {
+                // API authentication for doctors (including newly registered)
+                fetch('/api/auth/doctor', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Authentication failed');
+                    }
+                }).then(data => {
+                    localStorage.setItem('currentDoctor', JSON.stringify(data));
+                    window.location.href = '/doctor_dashboard';
+                }).catch(() => {
+                    showLoading(false);
+                    showError('Invalid doctor credentials.');
+                });
+            } else if (role === 'patient') {
+                // API authentication for patients (including newly registered)
+                fetch('/api/auth/patient', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Authentication failed');
+                    }
+                }).then(data => {
+                    localStorage.setItem('currentPatient', JSON.stringify(data));
+                    localStorage.setItem('currentPatientEmail', data.email);
+                    window.location.href = '/patient_dashboard';
+                }).catch(() => {
+                    showLoading(false);
+                    showError('Invalid patient credentials.');
+                });
+            }
         });
         
         // Auto-fill demo credentials on role selection (admin only)
